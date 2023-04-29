@@ -1,0 +1,66 @@
+<html>
+<head>
+    <script src="poker.js"></script>
+    <script src="jquery-3.6.4.min.js"></script>
+    <title>Test</title>
+    <style>
+        canvas {
+            position: relative;
+            top: 0;
+            transition: top ease 0.5s;
+            margin: 10px;
+        }
+        canvas:hover {
+            top: -10px;
+        }
+        .card {
+            position: static;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div>
+            <canvas id="m1" width="135" height="180"></canvas>
+            <canvas id="m2" width="135" height="180"></canvas>
+            <canvas id="m3" width="135" height="180"></canvas>
+            <canvas id="m4" width="135" height="180"></canvas>
+        </div>
+        <div>
+            <canvas id="m5" width="135" height="180"></canvas>
+            <canvas id="m6" width="135" height="180"></canvas>
+            <canvas id="m7" width="135" height="180"></canvas>
+            <canvas id="m8" width="135" height="180"></canvas>
+        </div>
+        <div>
+            <canvas id="m9" width="135" height="180"></canvas>
+            <canvas id="m10" width="135" height="180"></canvas>
+            <canvas id="m11" width="135" height="180"></canvas>
+            <canvas id="m12" width="135" height="180"></canvas>
+        </div>
+
+    </div>
+    <script>
+      const params = new URLSearchParams(document.location.search);
+      const id = params.get("id");
+
+      $.post("http://localhost:8080/pick_card", {"id": id}, function (r) {
+        for (let i = 1; i <= 12; i++) {
+          document.getElementById('m'+i).getContext('2d').drawPokerBack(0, 0, 180, '#b55', '#a22')
+        }
+        for (let n in r.data) {
+          document.getElementById(r.data[n].key).getContext('2d').drawNumberCard(0, 0, 180, 'h', r.data[n].number);
+        }
+      })
+
+      // var canvas = document.getElementById('myowncanvas').getContext('2d');
+      //
+      // canvas.drawNumberCard(10, 10, 180, 'h', '200');
+      // canvas.drawNumberCard(200, 200, 180, 'b', '90');
+
+      // var m1 = Poker.getCardImage(92,'c','6');
+      // document.body.append(m1);
+      // document.body.append(Poker.getCardImage(252,'h','2'));
+    </script>
+</body>
+</html>

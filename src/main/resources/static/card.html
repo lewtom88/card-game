@@ -1,0 +1,93 @@
+<html>
+<head>
+    <script src="poker.js"></script>
+    <script src="jquery-3.6.4.min.js"></script>
+    <script src="sockjs.min.js"></script>
+    <script src="stomp.min.js"></script>
+    <title>Test</title>
+    <style>
+        canvas {
+            position: relative;
+            top: 0;
+            transition: top ease 0.5s;
+            margin: 10px;
+        }
+        canvas:hover {
+            top: -10px;
+        }
+        .card {
+            position: static;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div>
+        <canvas id="m1" width="135" height="180"></canvas>
+        <canvas id="m2" width="135" height="180"></canvas>
+        <canvas id="m3" width="135" height="180"></canvas>
+        <canvas id="m4" width="135" height="180"></canvas>
+    </div>
+    <div>
+        <canvas id="m5" width="135" height="180"></canvas>
+        <canvas id="m6" width="135" height="180"></canvas>
+        <canvas id="m7" width="135" height="180"></canvas>
+        <canvas id="m8" width="135" height="180"></canvas>
+    </div>
+    <div>
+        <canvas id="m9" width="135" height="180"></canvas>
+        <canvas id="m10" width="135" height="180"></canvas>
+        <canvas id="m11" width="135" height="180"></canvas>
+        <canvas id="m12" width="135" height="180"></canvas>
+    </div>
+
+</div>
+<script>
+  function displayCards(r) {
+    if (!r.success) {
+      alert(r.errorMsg)
+      return;
+    }
+    for (let n in r.data) {
+      pickedCards[r.data[n].key] = r.data[n].value;
+      document.getElementById(r.data[n].key).getContext('2d').drawNumberCard(0, 0, 180, n == 0 ? 'h':'b', r.data[n].value);
+    }
+    for (let i = 1; i <= 12; i++) {
+      if (pickedCards['m'+i]) {
+        $('#m'+i).css("position", "static");
+        $('#m'+i).off("click");
+      } else {
+        document.getElementById('m'+i).getContext('2d').drawPokerBack(0, 0, 180, '#b55', '#a22')
+      }
+    }
+  }
+
+  const params = new URLSearchParams(document.location.search);
+  const id = params.get("id");
+  let pickedCards = {};
+
+  $.post("get_cards", {"id": id}, displayCards);
+
+  let sock = new SockJS("stomp");
+  let client = Stomp.over(sock);
+  client.connect({}, frame => {
+    // Subscribe to "/topic/messages". Whenever a message arrives add the text in a list-item element in the unordered list.
+    client.subscribe("/topic/" + id, payload => {
+      let r = JSON.parse(payload.body);
+      displayCards(r);
+    });
+
+  });
+
+  for (let i = 1; i <= 12; i++) {
+    if (!pickedCards['m'+i]) {
+      $('#m'+i).on('click', function() {
+        client.send('/app/cards', {}, JSON.stringify({'id': id, 'cardKey': this.id}));
+      })
+    }
+  }
+
+
+</script>
+</body>
+</html>

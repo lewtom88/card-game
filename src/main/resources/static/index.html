@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Card Game</title>
+    <script type="text/javascript" src="jquery-3.6.4.min.js">
+    </script>
+    <script type="text/javascript">
+     $.get('card_game', function(r) {
+      if (!r.success) {
+        alert(r.errorMsg);
+        return;
+      }
+      window.location.href = "card.html?id=" + r.data;
+     })
+    </script>
+</head>
+<body>
+</body>
+</html>  
+
+ 
