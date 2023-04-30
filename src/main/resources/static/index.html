@@ -5,13 +5,23 @@
     <script type="text/javascript" src="jquery-3.6.4.min.js">
     </script>
     <script type="text/javascript">
-     $.get('card_game', function(r) {
-      if (!r.success) {
-        alert(r.errorMsg);
-        return;
+      const params = new URLSearchParams(document.location.search);
+      const password = params.get("password");
+      const customNumbers = params.get("customNumbers");
+      let url = "card_game";
+      if (password) {
+        url += "?password=" + password;
+        if (customNumbers) {
+          url += "&customNumbers=" + customNumbers;
+        }
       }
-      window.location.href = "card.html?id=" + r.data;
-     })
+      $.get(url, function (r) {
+        if (!r.success) {
+          alert(r.errorMsg);
+          return;
+        }
+        window.location.href = "card.html?id=" + r.data;
+      })
     </script>
 </head>
 <body>

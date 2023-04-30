@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -81,8 +80,8 @@ public class RandomController {
     }
 
     @RequestMapping("/get_cards")
-    public Result<List<Card>> getCards(@RequestParam String id) {
-        Result r = new Result();
+    public Result<Cards> getCards(@RequestParam String id) {
+        Result<Cards> r = new Result();
         try {
             Cards cards = cache.get(id);
             if (cards == NULL) {
@@ -90,7 +89,7 @@ public class RandomController {
                 return r;
             }
 
-            r.setData(cards.getPickedList());
+            r.setData(cards);
         } catch (ExecutionException e) {
             logger.error("Failed to get from the cache.", e);
             r.setErrorMsg(e.getMessage());
@@ -101,7 +100,7 @@ public class RandomController {
 
     @MessageMapping("/cards")
     public void pickCard(CardMessage cardMessage) {
-        Result r = new Result();
+        Result<Cards> r = new Result();
 
         String id = cardMessage.getId();
         String cardKey = cardMessage.getCardKey();
@@ -114,11 +113,10 @@ public class RandomController {
             if (cards == NULL) {
                 r.setErrorMsg("Invalid request. id: " + id);
             } else if (cardKey == null) {
-                List<Card> cardList = cards.getPickedList();
-                r.setData(cardList);
+                r.setData(cards);
             } else {
                 cards.pick(cardKey);
-                r.setData(cards.getPickedList());
+                r.setData(cards);
             }
         } catch (ExecutionException e) {
             logger.error("Failed to get from the cache.", e);

@@ -14,7 +14,7 @@ public class Cards {
 
     private List<Card> pickedList;
 
-    private static Random random = new Random();
+    private static volatile Random random = new Random();
 
     public Cards(String numbers) {
         this(false, numbers);
@@ -53,6 +53,10 @@ public class Cards {
 
     public List<Card> getPickedList() {
         return pickedList;
+    }
+
+    public boolean isCustomized() {
+        return customized;
     }
 
 }
