@@ -65,8 +65,8 @@ public class RandomController {
             return r;
         }
 
-        UUID uuid = UUID.randomUUID();
-        String id = uuid.toString();
+
+        String id = generateID();
         Cards cards;
         if (vip && customNumbers != null) {
             cards = new Cards(true, customNumbers);
@@ -77,6 +77,14 @@ public class RandomController {
         r.setData(id);
 
         return r;
+    }
+
+    private String generateID() {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < 4; i++) {
+            builder.append(UUID.randomUUID().toString());
+        }
+        return builder.toString();
     }
 
     @RequestMapping("/get_cards")
