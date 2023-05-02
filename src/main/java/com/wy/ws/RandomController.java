@@ -34,6 +34,9 @@ public class RandomController {
     @Value("${basic_game_numbers}")
     private String gameNumbers;
 
+    @Value("${big_game_numbers}")
+    private String bigGameNumbers;
+
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
@@ -51,7 +54,7 @@ public class RandomController {
 
     @RequestMapping("/card_game")
     public Result<String> redirect(@RequestParam(required = false) String password,
-                                   @RequestParam(required = false) String customNumbers) {
+                                   @RequestParam(required = false) String mode) {
         boolean vip = (password != null && MD5Utils.verify(password, md5Digest));
 
         Result<String> r = new Result<>();
@@ -68,8 +71,8 @@ public class RandomController {
 
         String id = generateID();
         Cards cards;
-        if (vip && customNumbers != null) {
-            cards = new Cards(true, customNumbers);
+        if ("big".equals(mode)) {
+            cards = new Cards(true, bigGameNumbers);
         } else {
             cards = new Cards(gameNumbers);
         }
