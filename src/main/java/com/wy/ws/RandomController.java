@@ -37,6 +37,12 @@ public class RandomController {
     @Value("${big_game_numbers}")
     private String bigGameNumbers;
 
+    @Value("${extreme_games_numbers}")
+    private String extremeGameNumbers;
+
+    @Value("${ultimate_games_numbers}")
+    private String ultimateGameNumbers;
+
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
@@ -72,7 +78,11 @@ public class RandomController {
         String id = generateID();
         Cards cards;
         if ("big".equals(mode)) {
-            cards = new Cards(true, bigGameNumbers);
+            cards = new Cards("big", bigGameNumbers);
+        } else if ("extreme".equals(mode)) {
+            cards = new Cards("extreme", extremeGameNumbers);
+        } else if ("ultimate".equals(mode)) {
+            cards = new Cards("ultimate", ultimateGameNumbers);
         } else {
             cards = new Cards(gameNumbers);
         }

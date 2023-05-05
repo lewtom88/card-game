@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public class Cards {
 
-    private boolean customized;
+    private String mode;
 
     private ArrayList<Integer> randomPool;
 
@@ -17,11 +17,11 @@ public class Cards {
     private static volatile Random random = new Random();
 
     public Cards(String numbers) {
-        this(false, numbers);
+        this(null, numbers);
     }
 
-    public Cards(boolean customized, String numbers) {
-        this.customized = customized;
+    public Cards(String mode, String numbers) {
+        this.mode = mode;
         pickedList = new ArrayList<>();
         randomPool = new ArrayList<>();
         if (numbers != null) {
@@ -55,8 +55,7 @@ public class Cards {
         return pickedList;
     }
 
-    public boolean isCustomized() {
-        return customized;
+    public String getMode() {
+        return mode;
     }
-
 }

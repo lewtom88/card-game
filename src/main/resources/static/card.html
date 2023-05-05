@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <script src="poker.js"></script>
+    <script src="poker.my.js"></script>
     <script src="jquery-3.6.4.min.js"></script>
     <script src="sockjs.min.js"></script>
     <script src="stomp.min.js"></script>
@@ -66,7 +66,9 @@
       if (pickedCards['m'+i]) {
         $('#m'+i).css("position", "static");
         $('#m'+i).off("click");
-      } else if (r.data.customized) {
+      } else if (r.data.mode === 'extreme' || r.data.mode === 'ultimate') {
+        document.getElementById('m'+i).getContext('2d').drawPokerBack(0, 0, 180, '#28282B', '#1B1212')
+      } else if (r.data.mode === 'big') {
         document.getElementById('m'+i).getContext('2d').drawPokerBack(0, 0, 180, '#8A2BE2', '#4B0082')
       } else {
         document.getElementById('m'+i).getContext('2d').drawPokerBack(0, 0, 180, '#b55', '#a22')

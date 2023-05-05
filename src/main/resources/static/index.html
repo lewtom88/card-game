@@ -7,12 +7,16 @@
     <script type="text/javascript">
       const params = new URLSearchParams(document.location.search);
       const password = params.get("password");
-      const customNumbers = params.get("customNumbers");
+      const mode = params.get("mode");
       let url = "card_game";
       if (password) {
         url += "?password=" + password;
-        if (customNumbers) {
-          url += "&customNumbers=" + customNumbers;
+      }
+      if (mode) {
+        if (password) {
+          url += "&mode=" + mode;
+        } else {
+          url += "?mode=" + mode;
         }
       }
       $.get(url, function (r) {
